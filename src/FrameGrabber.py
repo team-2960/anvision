@@ -63,6 +63,7 @@ class FrameGrabber:
         
         cvSink = CameraServer.getVideo(source)
 
+        # TODO Move buffers to shared memory {https://superfastpython.com/numpy-share-array-processes/} Method 7
         buffers = [np.zeros((self.camera.x_res, self.camera.y_res),
                                  dtype="uint8") for i in range(self.buffer_count)]
 

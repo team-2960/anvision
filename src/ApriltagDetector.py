@@ -138,17 +138,17 @@ class ApriltagDetector:
         
         detector = apriltag.apriltag(self.tag_def.family, threads=self.threads) # pyright: ignore[reportArgumentType]
 
-        prev_capture_time = 0
+        prev_frame_ts = 0
         proc_start = time_ns()
         proc_end = time_ns()
 
         while not self.event.is_set():
             try:
-                proc_start = time_ns()
                 frame:Frame = self.frame_queue.get(timeout=1)
             except queue.Empty as e:
                 print(f"Frame queue timed out")
             else:
+                proc_start = time_ns()
                 # Detect Apriltags
                 detections = detector.detect(frame.buffer) # pyright: ignore[reportArgumentType]
 
@@ -166,17 +166,21 @@ class ApriltagDetector:
 
                     print(f"Tag {det['id']} Distance: {dist:.2f}m ", flush=True)
 
+                # TODO Add AprilTag Results queue
+
                 proc_end = time_ns()
                 
 
-                frame_period = (frame.timestamp - prev_capture_time) / 1e6
+                frame_period = (frame.timestamp - prev_frame_ts) * 1e-6
+                prev_frame_ts = frame.timestamp
                 frame_rate = 1.0 / frame_period 
-                proc_period = proc_end - proc_start
+                proc_period = (proc_end - proc_start) * 1e-9
 
                 print(f"Frame Period: {frame_period:.6f} s", flush=True)
                 print(f"Frame Rate: {frame_rate:.2f} hz", flush=True)
                 print(f"Proc Period: {proc_period:.6f} s", flush=True)
                 print(f"Overrun: {proc_period > frame_period}", flush=True) 
+                print(f"Queue Len: {self.frame_queue.qsize()}", flush=True)
 
 
                 

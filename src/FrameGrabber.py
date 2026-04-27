@@ -54,14 +54,14 @@ class FrameGrabber:
     def _worker(self) -> None:
         """ Frame grabber process worker method """
         source = cscore.UsbCamera(self.camera.name, self.camera.path_index)
-        source.setResolution(self.camera.x_res, self.camera.y_res)
         source.setVideoMode(
             pixelFormat=cscore.VideoMode.PixelFormat.kGray,
             width=self.camera.x_res,
             height=self.camera.y_res,
             fps=self.camera.fps)
+        CameraServer.startAutomaticCapture(source)
         
-        cvSink = CameraServer.getVideo()
+        cvSink = CameraServer.getVideo(source)
 
         buffers = [np.zeros((self.camera.x_res, self.camera.y_res),
                                  dtype="uint8") for i in range(self.buffer_count)]

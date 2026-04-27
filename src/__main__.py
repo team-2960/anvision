@@ -34,8 +34,8 @@ def main():
     frameGrabber = FrameGrabber(camera, frame_queue)
     detector = ApriltagDetector(tag_def, frame_queue)
 
-    frameGrabber._worker()
-    #detector.start()
+    frameGrabber.start()
+    detector.start()
 
 
 if __name__ == "__main__":

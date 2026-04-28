@@ -1,16 +1,13 @@
 from multiprocessing import Queue
-from time import time_ns
-
-import numpy as np
-import cv2
-import apriltag
-import cscore
-from cscore import CameraServer
 
 from ApriltagDef import ApriltagDef
 from ApriltagDetector import ApriltagDetector
 from FrameGrabber import FrameGrabber
 from Camera import Camera, Intrinsics
+from FrameBuffer import FrameBuffer
+from ApriltagResultViewer import ApriltagResultViewer
+from Frame import Frame
+from ApriltagResult import ApriltagResult
 
 camera = Camera(
     name="Webcam",
@@ -28,14 +25,26 @@ camera = Camera(
 tag_def = ApriltagDef(family="tag36h11", tagsize=0.2667)
 
 def main():
+    # Setup Inter
+    frame_queue:Queue = Queue()
+    result_queue:Queue = Queue()
 
-    frame_queue = Queue()
+    buffers = {f"{camera.name} buffer {i}":FrameBuffer(camera) for i in range(10)}
 
-    frameGrabber = FrameGrabber(camera, frame_queue)
-    detector = ApriltagDetector(tag_def, frame_queue)
+    frameGrabber = FrameGrabber(camera, frame_queue, buffers)
+    detector = ApriltagDetector(tag_def, frame_queue, result_queue, buffers)
+    viewer = ApriltagResultViewer(result_queue, buffers)
 
     frameGrabber.start()
     detector.start()
+
+    viewer.view_results()
+
+    frameGrabber.stop()
+    detector.stop()
+
+    frameGrabber.wait_on_stop()
+    detector.wait_on_stop()
 
 
 if __name__ == "__main__":

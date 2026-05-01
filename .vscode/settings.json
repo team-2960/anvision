@@ -6,6 +6,7 @@
         "Fitz",
         "imshow",
         "linalg",
+        "linuxpy",
         "Mjpeg"
     ]
 }

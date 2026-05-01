@@ -16,7 +16,7 @@ from ApriltagResult import ApriltagDetection, ApriltagResult
 
 class ApriltagDetector:
 
-    def __init__(self, tag_def: ApriltagDef, threads: int = 4):
+    def __init__(self, tag_def: ApriltagDef, decimate:int=2, threads: int = 4):
         """ Constructor
 
         Args:
@@ -26,7 +26,7 @@ class ApriltagDetector:
         self.tag_def = tag_def
         self.threads = threads
 
-        self.detector = apriltag.apriltag(self.tag_def.family, threads=self.threads) # pyright: ignore[reportArgumentType]
+        self.detector = apriltag.apriltag(self.tag_def.family, threads=self.threads,decimate=decimate) # pyright: ignore[reportArgumentType]
 
     def __del__(self):
 

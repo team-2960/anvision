@@ -1,4 +1,4 @@
-from time import monotonic_ns
+from time import monotonic
 from typing import Generator
 import numpy as np
 
@@ -36,18 +36,17 @@ class FrameGrabber:
             
 
             # Initialize time stamping
-            start = last = monotonic_ns()
+            start = last = monotonic()
 
             # Start capturing frames
             with capture:
-                fmt = capture.get_format()
-                fps = capture.get_fps()
 
                 # TODO Add logging
 
                 # Wait for frames
                 for frame in capture:
-                    new = monotonic_ns()
-                    fps, last = 1.0 / (new - last), new
-                    yield CameraFrame(self.camera, frame, frame.timestamp, fps)
+                    new = monotonic()
+                    framerate = 1.0 / new - last
+                    last = new 
+                    yield CameraFrame(self.camera, frame, frame.timestamp, framerate)
 

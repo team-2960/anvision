@@ -30,7 +30,7 @@ class CameraFrame:
             np.ndarray: new np object for the frame with the same shape as the camera buffer
         """
         return np.ndarray(
-            shape=(self.frame.width, self.frame.height, 2),
+            shape=(self.frame.height, self.frame.width, 2),
             dtype=np.uint8,
             buffer=self.frame.data
         )

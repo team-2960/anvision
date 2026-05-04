@@ -118,6 +118,21 @@ class ApriltagResult:
         self.detections = detections
         self.processing_time = processing_time
 
+    def gen_result_image(self) -> np.ndarray:
+        """ Create copy of the source image with result graphics embedded
+
+        Returns:
+            np.ndarray: copy of the source image with result graphics embedded
+        """
+        # Copy buffer before destructively modifying it
+        buffer = cv2.cvtColor(self.frame.frame_as_np(), cv2.COLOR_YUV2BGR_YUYV)
+
+        # Draw graphics for all detected april tags
+        for detection in self.detections:
+            detection.draw_apriltag_graphics(img=buffer)
+
+        return buffer
+
     
     def display(self, window:str="Result") -> int:
         """ Displays the AprilTag detection result in an OpenCV GUI window. Graphics are drawn on all april tags.
@@ -129,13 +144,6 @@ class ApriltagResult:
             int: 0 if no key was pressed, otherwise the key
         """
 
-        # Copy buffer before destructively modifying it
-        disp_buffer = cv2.cvtColor(self.frame.frame_as_np(), cv2.COLOR_YUV2BGR_YUYV)
-
-        # Draw graphics for all detected april tags
-        for detection in self.detections:
-            detection.draw_apriltag_graphics(img=disp_buffer)
-
         # Show the image
-        cv2.imshow(window, disp_buffer)
+        cv2.imshow(window, self.gen_result_image())
         return cv2.waitKey(1)

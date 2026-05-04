@@ -1,7 +1,12 @@
+from threading import Thread
+
 from ApriltagDef import ApriltagDef
 from ApriltagDetector import ApriltagDetector
 from FrameGrabber import FrameGrabber
 from Camera import Camera, Intrinsics
+
+import web
+
 
 camera = Camera(
     name="Webcam",
@@ -18,21 +23,22 @@ camera = Camera(
 
 tag_def = ApriltagDef(family="tag36h11", tagsize=0.2667)
 
-def main():
-    # Setup Inter
-
+def process(camera: Camera, tag_def:ApriltagDef):
     frameGrabber = FrameGrabber(camera)
     detector = ApriltagDetector(tag_def)
 
     for frame in frameGrabber.capture():
         result = detector.detect(frame)
-        print(f'Framerate: {frame.camera.fps} Hz')
-        print(f'Processing Time: {result.processing_time:.2f} ms')
+        web.add_result(result)
+    
 
+def main():
+    thread = Thread(target=process, args=(camera, tag_def))
+    thread.start()
 
-        # End capture if ESC is pressed
-        if result.display() == 27:
-            break
+    web.start_web_ui()
+
+    thread.join()
 
 
 if __name__ == "__main__":

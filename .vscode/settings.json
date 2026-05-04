@@ -2,9 +2,11 @@
     "cSpell.words": [
         "apriltag",
         "Apriltags",
+        "Arducam",
         "cscore",
         "Fitz",
         "imshow",
+        "Kalman",
         "linalg",
         "linuxpy",
         "Mjpeg"

@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools","wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+dynamic = ['version']
+name = "ANVision"
+authors = [
+    { name="Ryan Fitz-Gerald", email="ztif33@gmail.com" }
+]
+description = "An April Tag vision processing system for FRC robots."
+readme = {file="README.md", content-type="text/markdown"}
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "linuxpy",
+    "fastapi",
+    "uvicorn",
+    "apriltag"
+]
+
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+
+[project.optional-dependencies]
+dev = [
+    "autopep8",
+    "pytest"
+]
+
+
+[project.urls]
+homepage = "https://github.com/Team-2960/ANVision"
+repository = "https://github.com/Team-2960/ANVision.git"
+
+[project.scripts]
+init_db = "frc_autoscouting.__main__:init_db"
+sandbox = "frc_autoscouting.__main__:sandbox"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths=[
+    "tests"
+]

@@ -2,3 +2,5 @@ __pycache__
 .venv
 launch.json
 build
+opencv-python
+*egg-info

@@ -15,6 +15,7 @@ cmake -D CMAKE_BUILD_TYPE=Release \
       -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
       -D PYTHON_EXECUTABLE=$(which python) \
       -D BUILD_opencv_python3=ON \
+      -D BUILD_opencv_python2=OFF \
       -D ENABLE_NEON=ON \
       -D WITH_OPENMP=ON \
       -D WITH_OPENCL=OFF \
@@ -34,10 +35,10 @@ cmake -D CMAKE_BUILD_TYPE=Release \
       -D INSTALL_C_EXAMPLES=OFF \
       -D INSTALL_PYTHON_EXAMPLES=OFF \
       -D OPENCV_FORCE_LIBATOMIC_COMPILER_CHECK=1 \
-      -D PYTHON3_PACKAGES_PATH=/usr/lib/python3/dist-packages \
       -D OPENCV_GENERATE_PKGCONFIG=ON \
       -D BUILD_EXAMPLES=OFF ..
 
 make -j2
+make install
 
 cd ../../../
